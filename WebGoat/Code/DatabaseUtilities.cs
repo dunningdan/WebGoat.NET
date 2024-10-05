@@ -201,7 +201,10 @@ namespace OWASP.WebGoat.NET
 		{
 			if (userid.Length > 4)
 				userid = userid.Substring (0, 4);
-			String output = (String)DoScalar ("SELECT Email FROM UserList WHERE UserID = '" + userid + "'", GetGoatDBConnection ());
+			SqliteCommand cmd = GetGoatDBConnection().CreateCommand();
+			cmd.CommandText = "SELECT Email FROM UserList WHERE UserID = @userid";
+			cmd.Parameters.AddWithValue("@userid", userid);
+			String output = (String)cmd.ExecuteScalar();
 			if (output != null)
 				return output;
 			else 
